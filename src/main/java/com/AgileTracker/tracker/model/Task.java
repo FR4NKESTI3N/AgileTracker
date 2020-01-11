@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import net.minidev.json.annotate.JsonIgnore;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "tasks")
+@EntityListeners(AuditingEntityListener.class)
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.StringIdGenerator.class,
         property = "id")
-public class Project {
-
+public class Task {
     @Getter
     @Setter
-    @Id
+    @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
@@ -36,20 +36,18 @@ public class Project {
 
     @Getter
     @Setter
-    private enums.projectState state;
+    private enums.taskState state;
 
+    @Column(nullable = false, updatable = false)
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
-    private Date startDate = new Date();
+    private Date addDate = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
     @Getter
     @Setter
-    private Date expectedEndDate = new Date();
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Getter
-    @Setter
-    private Date actualEndDate = new Date();
+    private Date completedDate = new Date();
 }

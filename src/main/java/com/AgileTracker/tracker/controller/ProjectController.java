@@ -23,10 +23,7 @@ enum projectState{
 
 @RestController
 @RequestMapping("/project")
-@JsonIgnoreProperties(value={"status", "startDate", "expectedEndDate", "actualEndDate"}, allowGetters = true)
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.StringIdGenerator.class,
-        property = "id")
+@JsonIgnoreProperties(value={"status", "actualEndDate"}, allowGetters = true)
 public class ProjectController {
     @Autowired
     ProjectRepository project_repo;
@@ -51,12 +48,44 @@ public class ProjectController {
         return ResponseEntity.ok().build();
     }
 
+//    @PostMapping("/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public Project editProject(@PathVariable(value="id") Long id, @Valid @RequestBody Project project) throws GenericException{
+//        Project project_ = project_repo.findById(id).orElseThrow(
+//                () -> new GenericException("Error getting project."));
+//        project_repo.
+//        return project;
+//    }
 
     @GetMapping("/all")
     public List<Project> getAllProjects(){
-//        System.out.println("aaaaa");
         return project_repo.findAll();
     }
+
+    @GetMapping("/{id}/start")
+    public ResponseEntity<?> beginReview(@PathVariable(value="id") Long id) throws GenericException{
+        Project project = project_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        if(project.getState() != enums.projectState.NOT_STARTED)
+            throw new GenericException("Invalid operation!");
+        project.setState(enums.projectState.STARTED);
+        project_repo.save(project);
+        return ResponseEntity.ok().build();
+
+    }
+
+    @GetMapping("/{id}/review-start")
+    public ResponseEntity<?> beginProject(@PathVariable(value="id") Long id) throws GenericException{
+        Project project = project_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        if(project.getState() != enums.projectState.STARTED)
+            throw new GenericException("Invalid operation!");
+        project.setState(enums.projectState.IN_REVIEW);
+        project_repo.save(project);
+        return ResponseEntity.ok().build();
+
+    }
+
+//    @GetMapping
 
 
 }
