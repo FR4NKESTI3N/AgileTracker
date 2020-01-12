@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -50,4 +51,11 @@ public class Task {
     @Getter
     @Setter
     private Date completedDate = new Date();
+
+    @Getter
+    @Setter
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+
 }

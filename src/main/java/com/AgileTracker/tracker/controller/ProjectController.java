@@ -2,8 +2,10 @@ package com.AgileTracker.tracker.controller;
 
 import com.AgileTracker.tracker.exceptions.GenericException;
 import com.AgileTracker.tracker.model.Project;
+import com.AgileTracker.tracker.model.Task;
 import com.AgileTracker.tracker.model.enums;
 import com.AgileTracker.tracker.repository.ProjectRepository;
+import com.AgileTracker.tracker.repository.TaskRepository;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -14,12 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
-enum projectState{
-    NOT_STARTED,
-    STARTED,
-    FINISHED;
-}
 
 @RestController
 @RequestMapping("/project")
@@ -85,7 +81,37 @@ public class ProjectController {
 
     }
 
-//    @GetMapping
+    @GetMapping("/{pid}/tasks/all")
+    public List<Task> getAllTasks(@PathVariable(value="pid") Long pid) throws GenericException{
+        Project project = project_repo.findById(pid).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        return project.getTasks();
 
+    }
 
+    @Autowired
+    TaskRepository task_repo;
+
+    @PostMapping(value = "/{pid}/tasks/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Task addTask(@PathVariable(value="pid") Long pid,
+        @Valid @RequestBody Task task) throws GenericException{
+        Project project = project_repo.findById(pid).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        project.getTasks().add(task);
+        task.setProject(project);
+        project_repo.save(project);
+        return task;
+    }
+
+    @GetMapping("/{pid}/tasks/{tid}")
+    public Task getTask(@PathVariable(value="pid") Long pid,
+                        @PathVariable(value="tid") Long tid) throws GenericException{
+        Project project = project_repo.findById(pid).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        for(Task task : project.getTasks()){
+            if(task.getId() == tid)
+                return task;
+        }
+        throw new GenericException("Error getting task");
+    }
 }

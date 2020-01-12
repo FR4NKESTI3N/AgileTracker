@@ -13,4 +13,10 @@ public class enums {
         IN_PROGRESS,
         COMPLETED;
     }
+
+    public enum okrState{
+        NOT_STARTED,
+        IN_PROGRESS,
+        FINISHED;
+    }
 }

@@ -4,28 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import net.minidev.json.annotate.JsonIgnore;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "okr")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.StringIdGenerator.class,
         property = "id")
-public class Project {
-
+public class OKR {
     @Getter
     @Setter
-    @Id
+    @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
@@ -40,11 +34,12 @@ public class Project {
 
     @Getter
     @Setter
-    private enums.projectState state;
+    private enums.okrState state;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
+    @CreatedDate
     private Date startDate = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -59,25 +54,6 @@ public class Project {
 
     @Setter
     @Getter
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Task> tasks;
-
-    @Getter
-    @Setter
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "okr_id", nullable = false)
-    private OKR okr;
-
-//    @Setter
-//    @Getter
-//    @OneToOne
-//    private User manager;
-//
-//    @Setter
-//    @Getter
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private ProjectReview project_review;
-
-
-
+    @OneToMany(mappedBy = "okr", cascade = CascadeType.ALL)
+    private List<Project> projects;
 }
