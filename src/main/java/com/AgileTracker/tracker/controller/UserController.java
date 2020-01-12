@@ -2,6 +2,7 @@ package com.AgileTracker.tracker.controller;
 
 import com.AgileTracker.tracker.exceptions.GenericException;
 import com.AgileTracker.tracker.model.Project;
+import com.AgileTracker.tracker.model.Task;
 import com.AgileTracker.tracker.model.User;
 import com.AgileTracker.tracker.repository.UserRepository;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -39,5 +41,24 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/{uid}/projects")
+    public List<Project> getUserProjects(@PathVariable(value="uid") Long id) throws GenericException {
+        User user = user_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        List<Project> projects = user.getTeam().getOkr().getProjects();
+        for(Project project : projects)
+            project.setOkr(null);
+        return projects;
+    }
+
+    @GetMapping("/{uid}/tasks")
+    public List<Task> getUserTasks(@PathVariable(value="uid") Long id) throws GenericException {
+        User user = user_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting project."));
+
+        List<Task> tasks = user.getTeam().getOkr().getTasks();
+        for(Task task : tasks)
+            task.setProject(null);
+        return tasks;
+    }
 }

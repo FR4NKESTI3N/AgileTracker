@@ -65,7 +65,9 @@ public class Project {
     @Setter
     @Getter
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Sprint> sprints;
+    private List<Sprint
+
+            > sprints;
 
     @Getter
     @Setter

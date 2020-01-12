@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,4 +62,12 @@ public class OKR {
     @Setter
     @OneToMany(mappedBy = "okr", cascade = CascadeType.ALL)
     List<Team> teams;
+
+    public List<Task> getTasks(){
+        List<Task> tasks = new ArrayList<Task>();
+        for(Project project : getProjects()){
+            tasks.addAll(project.getTasks());
+        }
+        return tasks;
+    }
 }

@@ -52,7 +52,10 @@ public class ProjectController {
 
     @GetMapping("/all")
     public List<Project> getAllProjects(){
-        return project_repo.findAll();
+        List<Project> projects = project_repo.findAll();
+        for(Project project: projects)
+            project.setOkr(null);
+        return projects;
     }
 
     @GetMapping("/{id}/start")

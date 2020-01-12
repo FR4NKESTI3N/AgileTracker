@@ -1,10 +1,7 @@
 package com.AgileTracker.tracker.controller;
 
 import com.AgileTracker.tracker.exceptions.GenericException;
-import com.AgileTracker.tracker.model.OKR;
-import com.AgileTracker.tracker.model.Project;
-import com.AgileTracker.tracker.model.Task;
-import com.AgileTracker.tracker.model.enums;
+import com.AgileTracker.tracker.model.*;
 import com.AgileTracker.tracker.repository.OKRRepository;
 import com.AgileTracker.tracker.repository.ProjectRepository;
 import com.AgileTracker.tracker.repository.TaskRepository;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +55,12 @@ public class OKRController {
 
     @GetMapping("/all")
     public List<OKR> getOKR(){
-        return okr_repo.findAll();
+        List<OKR> okr = okr_repo.findAll();
+        for(OKR o : okr) {
+            o.setProjects(new ArrayList<Project>());
+            o.setTeams(new ArrayList<Team>());
+        }
+        return okr;
     }
 
     @GetMapping("/{id}/start")
@@ -96,11 +99,13 @@ public class OKRController {
     }
 
     @GetMapping("/{oid}/projects/all")
-    public Set<Project> getAllProjects(@PathVariable(value="oid") Long oid) throws GenericException{
+    public List<Project> getAllProjects(@PathVariable(value="oid") Long oid) throws GenericException{
         OKR okr = okr_repo.findById(oid).orElseThrow(
                 () -> new GenericException("Error getting OKR."));
-        Set<Project> temp = convertListToSet(okr.getProjects());
-        return temp;
+        List<Project> projects = (okr.getProjects());
+        for(Project project : projects)
+            project.setOkr(null);
+        return projects;
     }
 
     @PostMapping(value = "/{oid}/projects/add", consumes = MediaType.APPLICATION_JSON_VALUE)
