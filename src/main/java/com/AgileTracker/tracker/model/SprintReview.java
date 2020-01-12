@@ -1,20 +1,19 @@
 package com.AgileTracker.tracker.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
-@Table(name = "projectreviews")
+@Table(name = "sprintreviews")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.StringIdGenerator.class,
         property = "id")
-public class ProjectReview {
+public class SprintReview {
     @Getter
     @Setter
     @javax.persistence.Id
@@ -23,11 +22,17 @@ public class ProjectReview {
 
     @Getter
     @Setter
-    private String comments;
+    private String comment;
+
+    @Setter
+    @Getter
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<Task> task_accepted;
 
     @Getter
     @Setter
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
-    private Project project;
+    private Sprint sprint;
+
 }

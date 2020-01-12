@@ -62,6 +62,11 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> tasks;
 
+    @Setter
+    @Getter
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Sprint> sprints;
+
     @Getter
     @Setter
     @ManyToOne(cascade = CascadeType.ALL)
@@ -73,10 +78,10 @@ public class Project {
 //    @OneToOne
 //    private User manager;
 //
-//    @Setter
-//    @Getter
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private ProjectReview project_review;
+    @Setter
+    @Getter
+    @OneToOne(mappedBy = "project")
+    private ProjectReview review;
 
 
 

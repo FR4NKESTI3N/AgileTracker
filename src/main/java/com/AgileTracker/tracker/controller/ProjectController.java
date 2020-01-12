@@ -1,9 +1,7 @@
 package com.AgileTracker.tracker.controller;
 
 import com.AgileTracker.tracker.exceptions.GenericException;
-import com.AgileTracker.tracker.model.Project;
-import com.AgileTracker.tracker.model.Task;
-import com.AgileTracker.tracker.model.enums;
+import com.AgileTracker.tracker.model.*;
 import com.AgileTracker.tracker.repository.ProjectRepository;
 import com.AgileTracker.tracker.repository.TaskRepository;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -58,7 +56,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/start")
-    public ResponseEntity<?> beginReview(@PathVariable(value="id") Long id) throws GenericException{
+    public ResponseEntity<?> beginProject(@PathVariable(value="id") Long id) throws GenericException{
         Project project = project_repo.findById(id).orElseThrow(
                 () -> new GenericException("Error getting project."));
         if(project.getState() != enums.projectState.NOT_STARTED)
@@ -70,7 +68,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/review-start")
-    public ResponseEntity<?> beginProject(@PathVariable(value="id") Long id) throws GenericException{
+    public ResponseEntity<?> beginReview(@PathVariable(value="id") Long id) throws GenericException{
         Project project = project_repo.findById(id).orElseThrow(
                 () -> new GenericException("Error getting project."));
         if(project.getState() != enums.projectState.STARTED)
@@ -113,5 +111,31 @@ public class ProjectController {
                 return task;
         }
         throw new GenericException("Error getting task");
+    }
+
+    @PostMapping("/{pid}/review")
+    public ProjectReview doReview(@PathVariable(value="pid") Long pid,
+                                   @Valid @RequestBody ProjectReview review) throws GenericException{
+        Project project = project_repo.findById(pid).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        if(project.getState() != enums.projectState.STARTED)
+            throw new GenericException("Cant review a project not started.");
+        project.setReview(review);
+        project_repo.save(project);
+        return review;
+    }
+
+    @GetMapping("/{pid}/review")
+    public ProjectReview getReview(@PathVariable(value="pid") Long pid) throws GenericException{
+        Project project = project_repo.findById(pid).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        return project.getReview();
+    }
+
+    @GetMapping("/{pid}/sprints")
+    public List<Sprint> getSprints(@PathVariable(value="pid") Long pid) throws GenericException{
+        Project project = project_repo.findById(pid).orElseThrow(
+                () -> new GenericException("Error getting project."));
+        return project.getSprints();
     }
 }

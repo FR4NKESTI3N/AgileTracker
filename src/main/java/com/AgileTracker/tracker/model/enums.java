@@ -19,4 +19,12 @@ public class enums {
         IN_PROGRESS,
         FINISHED;
     }
+
+    public enum sprintState{
+        NOT_STARTED,
+        IN_PLANNING,
+        STARTED,
+        IN_REVIEW,
+        FINISHED;
+    }
 }

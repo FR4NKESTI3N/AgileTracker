@@ -56,4 +56,9 @@ public class OKR {
     @Getter
     @OneToMany(mappedBy = "okr", cascade = CascadeType.ALL)
     private List<Project> projects;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "okr", cascade = CascadeType.ALL)
+    List<Team> teams;
 }

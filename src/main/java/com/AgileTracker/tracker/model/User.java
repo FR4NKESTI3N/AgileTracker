@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +33,18 @@ public class User {
 
     @Getter
     @Setter
-    @NotBlank
     private Boolean manager = false;
+
+//    @Getter
+//    @Setter
+//    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
+//    private List<Team> managedTeams;
+
+    @Getter
+    @Setter
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "team_id", nullable = true)
+    private Team team;
 
 //    @Getter
 //    @Setter

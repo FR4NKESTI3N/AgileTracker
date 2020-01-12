@@ -1,0 +1,57 @@
+package com.AgileTracker.tracker.controller;
+
+
+import com.AgileTracker.tracker.exceptions.GenericException;
+import com.AgileTracker.tracker.model.Project;
+import com.AgileTracker.tracker.model.Team;
+import com.AgileTracker.tracker.model.User;
+import com.AgileTracker.tracker.repository.TeamRepository;
+import com.AgileTracker.tracker.repository.UserRepository;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping("/team")
+@JsonIgnoreProperties(value={"manager"}, allowGetters = true)
+public class TeamController {
+    @Autowired
+    TeamRepository team_repo;
+
+    @Autowired
+    UserRepository user_repo;
+
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Team addTeam(@Valid @RequestBody Team team){
+        return team_repo.save(team);
+    }
+
+    @GetMapping("/{id}")
+    public Team getTeamById(@PathVariable(value="id") Long id) throws GenericException {
+        return team_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting Team."));
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteTeam(@PathVariable(value="id") Long id) throws GenericException{
+        Team team = team_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting Team."));
+        team_repo.delete(team);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{tid}/manager/{uid}")
+    public Team setManager(@PathVariable(value="id") Long tid,
+                           @PathVariable(value="id") Long uid) throws GenericException {
+        Team team = team_repo.findById(tid).orElseThrow(
+                () -> new GenericException("Error getting Team."));
+        User manager = user_repo.findById(uid).orElseThrow(
+                () -> new GenericException("Error getting Team."));
+//        team.setManager();
+        return team;
+    }
+}
