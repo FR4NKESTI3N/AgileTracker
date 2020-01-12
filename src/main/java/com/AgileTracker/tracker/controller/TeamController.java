@@ -44,6 +44,17 @@ public class TeamController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("{tid}/user")
+    public Team addUser(@Valid @RequestBody User user,
+                        @PathVariable(value="tid") Long id) throws GenericException {
+        Team team = team_repo.findById(id).orElseThrow(
+                () -> new GenericException("Error getting Team."));
+        user.setManager(false);
+        team.getMembers().add(user);
+        user.setTeam(team);
+        return team_repo.save(team);
+    }
+
     @PostMapping("{tid}/manager/{uid}")
     public Team setManager(@PathVariable(value="id") Long tid,
                            @PathVariable(value="id") Long uid) throws GenericException {

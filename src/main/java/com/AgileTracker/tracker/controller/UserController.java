@@ -31,11 +31,13 @@ public class UserController {
                 () -> new GenericException("Error getting user."));
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(value="id") Long id) throws GenericException{
         User user = user_repo.findById(id).orElseThrow(
                 () -> new GenericException("Error getting project."));
         user_repo.delete(user);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/")
 }
