@@ -30,8 +30,8 @@ public class StandUp {
     @JoinColumn(name = "sprint_id", nullable = false)
     private Sprint sprint;
 
-    @Setter
-    @Getter
-    @OneToMany(mappedBy = "standup", cascade = CascadeType.ALL)
-    private List<Task> task_accepted;
+//    @Setter
+//    @Getter
+//    @OneToMany(mappedBy = "standup", cascade = CascadeType.ALL)
+//    private List<Task> task_accepted;
 }

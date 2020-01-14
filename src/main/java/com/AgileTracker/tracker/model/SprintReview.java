@@ -24,10 +24,10 @@ public class SprintReview {
     @Setter
     private String comment;
 
-    @Setter
-    @Getter
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
-    private List<Task> task_accepted;
+//    @Setter
+//    @Getter
+//    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+//    private List<Task> task_accepted;
 
     @Getter
     @Setter
