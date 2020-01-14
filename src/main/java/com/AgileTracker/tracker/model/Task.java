@@ -58,6 +58,16 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @Getter
+    @Setter
+    @OneToOne(cascade = CascadeType.ALL)
+    private TaskAccept task_accepted;
+
+    @Getter
+    @Setter
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sprint_id", nullable = false)
+    private Sprint sprint;
 //    @Getter
 //    @Setter
 //    @ManyToOne(cascade = CascadeType.ALL)

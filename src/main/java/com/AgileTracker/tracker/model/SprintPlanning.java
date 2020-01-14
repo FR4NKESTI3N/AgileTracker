@@ -22,6 +22,10 @@ public class SprintPlanning {
 
     @Getter
     @Setter
+    private String comments;
+
+    @Getter
+    @Setter
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
     private Sprint sprint;

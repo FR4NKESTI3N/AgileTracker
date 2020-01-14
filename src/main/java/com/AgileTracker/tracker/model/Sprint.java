@@ -56,4 +56,11 @@ public class Sprint {
     @Getter
     @OneToOne(mappedBy = "sprint")
     private SprintPlanning review;
+
+    @Setter
+    @Getter
+    @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL)
+    private List<Task> tasks;
+
+
 }
